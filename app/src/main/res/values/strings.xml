@@ -12,7 +12,8 @@
     <string name="input_level_1">Level 1 — Ringan (flashing, bypass)</string>
     <string name="input_level_2">Level 2 — Menengah (LCD, baterai)</string>
     <string name="input_level_3">Level 3 — Berat (IC, mati total)</string>
-    <string name="btn_new_receipt">✓ Nota Baru (Selesai &amp; Reset)</string>
+    <string name="btn_new_receipt">✓ Nota Baru</string>
+    <string name="btn_share_receipt">Bagikan</string>
 
     <!-- ===== Nota Pelanggan ===== -->
     <string name="receipt_store_name">Ketantech Store</string>
@@ -28,6 +29,10 @@
     <string name="receipt_total">TOTAL ESTIMASI</string>
     <string name="receipt_warranty_message">Harga di atas adalah estimasi transparan. Biaya Garansi &amp; QC dialokasikan untuk jaminan pemasangan dan penggantian jika terjadi kegagalan komponen selama masa garansi. Garansi berlaku %1$d hari untuk jasa pemasangan dan komponen yang diganti.</string>
     <string name="receipt_footer_thanks">Terima kasih atas kepercayaan Anda 🙏</string>
+
+    <!-- Empty State -->
+    <string name="empty_state_title">Belum Ada Data Servis</string>
+    <string name="empty_state_message">Isi form di atas untuk melihat estimasi biaya.\nNota akan muncul di sini secara otomatis.</string>
 
     <!-- ===== Settings ===== -->
     <string name="settings_section_pricing">Konfigurasi Harga</string>

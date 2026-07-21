@@ -87,7 +87,11 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        binding.rgServiceLevel.setOnCheckedChangeListener { _, _ -> recalculate() }
+        binding.rgServiceLevel.setOnCheckedChangeListener { group, _ ->
+            // Haptic feedback ringan saat ganti level
+            group.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_TICK)
+            recalculate()
+        }
     }
 
     private fun setupButtons() {
@@ -98,7 +102,65 @@ class MainActivity : AppCompatActivity() {
             // Finalisasi: nomor nota naik (PRD 10.1), lalu form dibersihkan
             receiptGen.consumeNext()
             clearInputs()
+            // Haptic feedback untuk aksi penting
+            it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
         }
+        binding.btnShareReceipt.setOnClickListener {
+            shareReceiptAsText()
+        }
+    }
+
+    /** Format nota sebagai teks siap share ke WhatsApp. */
+    private fun shareReceiptAsText() {
+        val sparepartText = binding.etSparepartCost.text.toString()
+        val sparepart = ThousandSeparatorTextWatcher.parse(sparepartText)
+        val level = selectedLevel()
+        val serviceFee = PriceCalculator.feeForLevel(level, prefs)
+        val warrantyDays = PriceCalculator.warrantyDaysForLevel(level, prefs)
+        val result = PriceCalculator.calculate(
+            sparepartCost = sparepart,
+            riskMarginPercent = prefs.riskMarginPercent,
+            operationalCost = prefs.operationalCost,
+            serviceFee = serviceFee
+        )
+
+        val device = binding.etDeviceName.text.toString().trim()
+        val customer = binding.etCustomerName.text.toString().trim()
+        val receiptNumber = receiptGen.peekNext()
+        val date = displayDateFormat.format(Date())
+
+        val sb = StringBuilder()
+        sb.appendLine("🧾 *KETANTECH STORE*")
+        sb.appendLine("Estimasi Biaya Servis")
+        sb.appendLine("─".repeat(28))
+        sb.appendLine("No: $receiptNumber")
+        sb.appendLine("Tgl: $date")
+        sb.appendLine()
+        if (device.isNotEmpty()) sb.appendLine("📱 *$device*")
+        if (customer.isNotEmpty()) sb.appendLine("👤 $customer")
+        sb.appendLine()
+        sb.appendLine("*RINCIAN BIAYA*")
+        if (result.showSparepartRows) {
+            sb.appendLine("• Suku Cadang: ${rupiah.format(result.sparepartCost)}")
+            sb.appendLine("• Garansi & QC: ${rupiah.format(result.riskFund)}")
+        }
+        sb.appendLine("• Bahan Penunjang: ${rupiah.format(result.operationalCost)}")
+        sb.appendLine("• Jasa Teknisi L$level.tier: ${rupiah.format(result.serviceFee)}")
+        sb.appendLine()
+        sb.appendLine("─".repeat(28))
+        sb.appendLine("💰 *TOTAL: ${rupiah.format(result.total)}*")
+        sb.appendLine("─".repeat(28))
+        sb.appendLine()
+        sb.appendLine("Garansi berlaku $warrantyDays hari untuk jasa pemasangan dan komponen yang diganti.")
+        sb.appendLine()
+        sb.appendLine("Terima kasih 🙏")
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, sb.toString())
+            putExtra(Intent.EXTRA_SUBJECT, "Nota Servis $receiptNumber")
+        }
+        startActivity(Intent.createChooser(shareIntent, "Bagikan nota via..."))
     }
 
     private fun clearInputs() {
@@ -151,6 +213,12 @@ class MainActivity : AppCompatActivity() {
             R.string.receipt_customer_format,
             customer.ifEmpty { getString(R.string.receipt_default_customer) }
         )
+
+        // Empty state: tampilkan panduan jika belum ada input sama sekali
+        val hasAnyInput = device.isNotEmpty() || customer.isNotEmpty() ||
+            binding.etSparepartCost.text.toString().isNotEmpty()
+        binding.layoutEmptyState.visibility = if (hasAnyInput) View.GONE else View.VISIBLE
+        binding.layoutReceiptContent.visibility = if (hasAnyInput) View.VISIBLE else View.GONE
 
         // PRD 7.2: baris sparepart & garansi hanya muncul jika modal > 0
         val sparepartVisibility = if (result.showSparepartRows) View.VISIBLE else View.GONE

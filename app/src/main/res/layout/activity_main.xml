@@ -144,12 +144,31 @@
                         android:text="@string/input_level_3" />
                 </RadioGroup>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnNewReceipt"
+                <!-- Tombol aksi -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="@string/btn_new_receipt" />
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnShareReceipt"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:text="@string/btn_share_receipt"
+                        app:icon="@drawable/ic_share"
+                        app:iconSize="18dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNewReceipt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/btn_new_receipt" />
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -171,13 +190,56 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- Logo + nama toko -->
-                <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_gravity="center_horizontal"
-                    android:contentDescription="@string/desc_logo"
-                    android:src="@drawable/ic_logo" />
+                <!-- Empty State: panduan saat belum ada input -->
+                <LinearLayout
+                    android:id="@+id/layoutEmptyState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📋"
+                        android:textSize="48sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/empty_state_title"
+                        android:textColor="@color/slate_text"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="@string/empty_state_message"
+                        android:textColor="@color/slate_text_secondary"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+
+                <!-- Konten Nota (disembunyikan saat empty state) -->
+                <LinearLayout
+                    android:id="@+id/layoutReceiptContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Logo + nama toko -->
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center_horizontal"
+                        android:contentDescription="@string/desc_logo"
+                        android:src="@drawable/ic_logo" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -436,6 +498,7 @@
                     android:layout_height="2dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/dashed_line" />
+                </LinearLayout> <!-- end layoutReceiptContent -->
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
