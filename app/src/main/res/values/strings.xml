@@ -111,6 +111,34 @@
     <string name="report_empty_level">Belum ada servis hari ini.</string>
     <string name="report_avg_per_service">Rata-rata per servis</string>
 
+    <!-- ===== P1: Estimasi Waktu ===== -->
+    <string name="input_estimated_hours_hint">Estimasi Waktu (jam)</string>
+    <string name="receipt_estimated_time">Estimasi Selesai</string>
+    <string name="receipt_estimated_format">%1$d jam</string>
+    <string name="receipt_estimated_quick">Cepat</string>
+
+    <!-- ===== P1: Kalkulator Modal ===== -->
+    <string name="btn_modal_calculator">🔢 Kalkulator Modal</string>
+    <string name="modal_calc_title">Kalkulator Modal Sparepart</string>
+    <string name="modal_calc_hint">Tambah komponen (mis. LCD, baterai, ongkir)</string>
+    <string name="modal_calc_component_hint">Nama komponen</string>
+    <string name="modal_calc_add">Tambah Baris</string>
+    <string name="modal_calc_total">Total Modal</string>
+    <string name="modal_calc_apply">Gunakan Total</string>
+    <string name="modal_calc_clear">Kosongkan</string>
+
+    <!-- ===== P1: Foto Nota ===== -->
+    <string name="btn_save_image">📷 Simpan Gambar</string>
+    <string name="receipt_saved_image">Nota tersimpan ke galeri</string>
+    <string name="receipt_save_image_failed">Gagal menyimpan gambar</string>
+
+    <!-- ===== P1: Reminder Garansi ===== -->
+    <string name="reminder_channel_name">Reminder Garansi</string>
+    <string name="reminder_channel_desc">Pengingat sebelum garansi servis jatuh tempo</string>
+    <string name="reminder_title">Garansi segera habis</string>
+    <string name="reminder_text">%1$s — garansi %2$s berakhir dalam 3 hari. Hubungi pelanggan jika perlu.</string>
+    <string name="reminder_action_open">Lihat Nota</string>
+
     <!-- ===== Settings ===== -->
     <string name="settings_section_pricing">Konfigurasi Harga</string>
     <string name="settings_risk_margin">Persentase Garansi &amp; QC / Dana Risiko (%)</string>

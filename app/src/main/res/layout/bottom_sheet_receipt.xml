@@ -242,6 +242,16 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!-- Estimasi waktu (P1) -->
+    <TextView
+        android:id="@+id/tvEstimatedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/slate_text_secondary"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Pesan edukasi -->
     <TextView
         android:id="@+id/tvWarrantyMessage"
@@ -283,9 +293,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
             android:text="@string/btn_share_receipt"
+            android:textSize="12sp"
             app:icon="@drawable/ic_share"
+            app:iconSize="18dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveImage"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="4dp"
+            android:text="@string/btn_save_image"
+            android:textSize="12sp"
+            app:icon="@drawable/ic_camera"
             app:iconSize="18dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -293,6 +316,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/btn_done" />
+            android:layout_marginStart="4dp"
+            android:text="@string/btn_done"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

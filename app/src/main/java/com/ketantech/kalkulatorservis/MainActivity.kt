@@ -1,6 +1,10 @@
 package com.ketantech.kalkulatorservis
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +12,9 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.ketantech.kalkulatorservis.data.AppRepository
 import com.ketantech.kalkulatorservis.data.Customer
@@ -64,6 +70,14 @@ class MainActivity : AppCompatActivity() {
     private var currentLevel: ServiceLevel = ServiceLevel.LEVEL_1
     private var currentWarrantyDays: Int = 7
 
+    /** Bottom sheet nota yang sedang tampil (untuk capture gambar). */
+    private var activeReceiptSheet: ReceiptBottomSheet? = null
+
+    /** Launcher untuk permission POST_NOTIFICATIONS (Android 13+) & WRITE_EXTERNAL_STORAGE (lama). */
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { /* hasil diabaikan; notifikasi/gambar opsional */ }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         setupInputs()
         setupButtons()
         observeCustomers()
+        requestEssentialPermissions()
 
         // Pulihkan input setelah rotasi layar
         savedInstanceState?.let { restoreState(it) }
@@ -205,6 +220,41 @@ class MainActivity : AppCompatActivity() {
         binding.btnSaveTemplate.setOnClickListener {
             showSaveTemplateDialog()
         }
+
+        binding.btnModalCalculator.setOnClickListener {
+            ModalCalculatorBottomSheet { total ->
+                binding.etSparepartCost.setText(
+                    if (total > 0) ThousandSeparatorTextWatcher.format(total) else ""
+                )
+                Toast.makeText(
+                    this,
+                    "Modal terisi: " + rupiah.format(total),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }.show(supportFragmentManager, "modal_calc")
+        }
+    }
+
+    /** Minta permission notifikasi (Android 13+) saat app pertama jalan. */
+    private fun requestEssentialPermissions() {
+        val needed = mutableListOf<String>()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                needed.add(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                needed.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
+        if (needed.isNotEmpty()) {
+            permissionLauncher.launch(needed.toTypedArray())
+        }
     }
 
     /** Simpan nota ke database, lalu reset form untuk nota berikutnya. */
@@ -220,6 +270,7 @@ class MainActivity : AppCompatActivity() {
         val receiptNumber = receiptGen.consumeNext()
         val device = binding.etDeviceName.text.toString().trim()
         val customer = binding.etCustomerName.text.toString().trim()
+        val estimatedHours = binding.etEstimatedHours.text.toString().toIntOrNull() ?: 0
 
         val receipt = Receipt(
             receiptNumber = receiptNumber,
@@ -231,7 +282,8 @@ class MainActivity : AppCompatActivity() {
             serviceFee = result.serviceFee,
             total = result.total,
             serviceLevel = currentLevel.tier,
-            warrantyDays = currentWarrantyDays
+            warrantyDays = currentWarrantyDays,
+            estimatedHours = estimatedHours
         )
 
         lifecycleScope.launch {
@@ -338,6 +390,7 @@ class MainActivity : AppCompatActivity() {
     /** Tampilkan nota sebagai popup bottom sheet. */
     private fun showReceiptPopup() {
         val result = currentResult ?: return
+        val estimatedHours = binding.etEstimatedHours.text.toString().toIntOrNull() ?: 0
 
         val bottomSheet = ReceiptBottomSheet.newInstance(
             receiptNumber = receiptGen.peekNext(),
@@ -346,10 +399,46 @@ class MainActivity : AppCompatActivity() {
             result = result,
             serviceLevel = currentLevel,
             warrantyDays = currentWarrantyDays,
+            estimatedHours = estimatedHours,
             onShareClick = { shareReceiptAsText() },
+            onSaveImageClick = { saveReceiptAsImage() },
             onDoneClick = { /* tutup saja */ }
         )
+        activeReceiptSheet = bottomSheet
         bottomSheet.show(supportFragmentManager, ReceiptBottomSheet.TAG)
+    }
+
+    /** Capture tampilan nota bottom sheet menjadi gambar & simpan ke galeri. */
+    private fun saveReceiptAsImage() {
+        val sheet = activeReceiptSheet ?: return
+        val rootView = sheet.view ?: return
+        // Pastikan view sudah ter-layout
+        rootView.post {
+            try {
+                val bitmap = ReceiptImageSaver.captureView(rootView)
+                val filename = "nota_" + receiptGen.peekNext().replace("-", "_")
+                val uri = ReceiptImageSaver.saveToGallery(this, bitmap, filename)
+                if (uri != null) {
+                    Toast.makeText(
+                        this,
+                        R.string.receipt_saved_image,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        R.string.receipt_save_image_failed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this,
+                    R.string.receipt_save_image_failed,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     /** Format nota sebagai teks siap share ke WhatsApp. */
@@ -399,9 +488,11 @@ class MainActivity : AppCompatActivity() {
         binding.etDeviceName.text?.clear()
         binding.etCustomerName.text?.clear()
         binding.etSparepartCost.text?.clear()
+        binding.etEstimatedHours.text?.clear()
         binding.rbLevel1.isChecked = true
         hasCalculated = false
         currentResult = null
+        activeReceiptSheet = null
     }
 
     private fun selectedLevel(): ServiceLevel = when (binding.rgServiceLevel.checkedRadioButtonId) {

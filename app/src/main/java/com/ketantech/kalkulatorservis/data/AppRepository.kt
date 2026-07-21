@@ -48,6 +48,10 @@ class AppRepository(context: Context) {
     /** Riwayat nota milik satu pelanggan. */
     fun getReceiptsByCustomer(name: String): Flow<List<Receipt>> = receiptDao.getByCustomer(name)
 
+    /** Nota yang garansinya jatuh tempo pada tanggal target. */
+    suspend fun getReceiptsExpiringOn(targetDate: java.util.Date): List<Receipt> =
+        receiptDao.getReceiptsExpiringOn(targetDate)
+
     // Template
     fun getAllTemplates(): Flow<List<ServiceTemplate>> = templateDao.getAll()
     suspend fun saveTemplate(template: ServiceTemplate): Long = templateDao.insert(template)

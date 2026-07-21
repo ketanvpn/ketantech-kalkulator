@@ -103,7 +103,9 @@ class HistoryActivity : AppCompatActivity() {
                 else -> ServiceLevel.LEVEL_1
             },
             warrantyDays = receipt.warrantyDays,
+            estimatedHours = receipt.estimatedHours,
             onShareClick = { shareReceipt(receipt) },
+            onSaveImageClick = { /* simpan gambar dari history tidak diaktifkan */ },
             onDoneClick = { }
         )
         bottomSheet.show(supportFragmentManager, ReceiptBottomSheet.TAG)

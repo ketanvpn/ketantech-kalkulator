@@ -10,7 +10,7 @@ import java.util.Date
 
 @Database(
     entities = [Receipt::class, Customer::class, ServiceTemplate::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -31,6 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "ketantech_database"
                 )
                     .addCallback(DatabaseCallback())
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

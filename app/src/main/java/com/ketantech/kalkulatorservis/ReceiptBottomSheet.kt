@@ -34,7 +34,9 @@ class ReceiptBottomSheet : BottomSheetDialogFragment() {
     var result: CalculationResult? = null
     var serviceLevel: ServiceLevel = ServiceLevel.LEVEL_1
     var warrantyDays: Int = 7
+    var estimatedHours: Int = 0
     var onShareClick: (() -> Unit)? = null
+    var onSaveImageClick: (() -> Unit)? = null
     var onDoneClick: (() -> Unit)? = null
 
     override fun onCreateView(
@@ -83,11 +85,23 @@ class ReceiptBottomSheet : BottomSheetDialogFragment() {
 
         binding.tvWarrantyMessage.text =
             getString(R.string.receipt_warranty_message, warrantyDays)
+
+        // Estimasi waktu (P1)
+        if (estimatedHours > 0) {
+            binding.tvEstimatedTime.visibility = View.VISIBLE
+            binding.tvEstimatedTime.text = getString(R.string.receipt_estimated_time) +
+                ": " + getString(R.string.receipt_estimated_format, estimatedHours)
+        } else {
+            binding.tvEstimatedTime.visibility = View.GONE
+        }
     }
 
     private fun setupButtons() {
         binding.btnShare.setOnClickListener {
             onShareClick?.invoke()
+        }
+        binding.btnSaveImage.setOnClickListener {
+            onSaveImageClick?.invoke()
         }
         binding.btnDone.setOnClickListener {
             onDoneClick?.invoke()
@@ -110,7 +124,9 @@ class ReceiptBottomSheet : BottomSheetDialogFragment() {
             result: CalculationResult,
             serviceLevel: ServiceLevel,
             warrantyDays: Int,
+            estimatedHours: Int = 0,
             onShareClick: () -> Unit,
+            onSaveImageClick: () -> Unit = {},
             onDoneClick: () -> Unit
         ): ReceiptBottomSheet {
             return ReceiptBottomSheet().apply {
@@ -120,7 +136,9 @@ class ReceiptBottomSheet : BottomSheetDialogFragment() {
                 this.result = result
                 this.serviceLevel = serviceLevel
                 this.warrantyDays = warrantyDays
+                this.estimatedHours = estimatedHours
                 this.onShareClick = onShareClick
+                this.onSaveImageClick = onSaveImageClick
                 this.onDoneClick = onDoneClick
             }
         }

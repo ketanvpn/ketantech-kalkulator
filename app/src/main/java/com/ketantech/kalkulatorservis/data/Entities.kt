@@ -21,6 +21,7 @@ data class Receipt(
     val total: Long,
     val serviceLevel: Int,
     val warrantyDays: Int,
+    val estimatedHours: Int = 0,
     val createdAt: Date = Date()
 )
 

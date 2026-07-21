@@ -45,6 +45,10 @@ interface ReceiptDao {
 
     @Query("SELECT * FROM receipts WHERE customerName = :name ORDER BY createdAt DESC")
     fun getByCustomer(name: String): Flow<List<Receipt>>
+
+    /** Nota yang garansinya jatuh tempo pada tanggal tertentu (untuk reminder). */
+    @Query("SELECT * FROM receipts WHERE date(createdAt/1000, 'unixepoch', '+' || warrantyDays || ' days') = date(:targetDate/1000, 'unixepoch')")
+    suspend fun getReceiptsExpiringOn(targetDate: java.util.Date): List<Receipt>
 }
 
 data class LevelSummary(

@@ -342,6 +342,37 @@
                         android:maxLines="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Tombol buka kalkulator modal -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnModalCalculator"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/btn_modal_calculator"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_calculate"
+                    app:iconSize="16dp" />
+
+                <!-- Estimasi waktu (P1) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/input_estimated_hours_hint"
+                    app:suffixText=" jam"
+                    app:startIconDrawable="@drawable/ic_time"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEstimatedHours"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
