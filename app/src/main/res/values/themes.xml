@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.KetantechKalkulator" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorPrimaryVariant">@color/blue_primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/green_total</item>
+        <item name="android:colorBackground">@color/slate_background</item>
+        <item name="android:statusBarColor">@color/blue_primary_dark</item>
+        <item name="android:windowBackground">@color/slate_background</item>
+    </style>
+</resources>

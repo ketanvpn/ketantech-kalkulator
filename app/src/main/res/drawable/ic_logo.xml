@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Logo placeholder Ketantech Store — GANTI FILE INI dengan logo asli.
+     Selama nama resource tetap @drawable/ic_logo, tidak perlu ubah kode apa pun. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+
+    <!-- Latar lingkaran biru -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M48,4a44,44 0 1,1 -0.01,0z" />
+
+    <!-- Badan HP -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,24h24c2.2,0 4,1.8 4,4v40c0,2.2 -1.8,4 -4,4h-24c-2.2,0 -4,-1.8 -4,-4v-40c0,-2.2 1.8,-4 4,-4z" />
+    <!-- Layar HP -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M36,30h24v32h-24z" />
+    <!-- Tombol home -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M48,66a2.5,2.5 0 1,1 -0.01,0z" />
+
+    <!-- Kunci inggris (simbol servis) melintang di layar -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,40c-1.7,0 -3,1.3 -3,3c0,0.9 0.4,1.7 1,2.3l10,10c0.6,0.6 1.4,1 2.3,1c1.7,0 3,-1.3 3,-3c0,-0.9 -0.4,-1.7 -1,-2.3l-10,-10c-0.6,-0.6 -1.4,-1 -2.3,-1zM39.5,41.5a1.5,1.5 0 1,0 0.01,0z" />
+
+    <!-- Gigi/gir kecil di pojok kanan atas -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M66,26l1.5,3l3.2,0.5l-2.3,2.3l0.5,3.2l-2.9,-1.5l-2.9,1.5l0.5,-3.2l-2.3,-2.3l3.2,-0.5z" />
+</vector>

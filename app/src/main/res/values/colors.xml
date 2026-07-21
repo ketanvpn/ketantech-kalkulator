@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema warna sesuai PRD 6.3 -->
+    <color name="blue_primary">#2563EB</color>
+    <color name="blue_primary_dark">#1D4ED8</color>
+    <color name="blue_light">#DBEAFE</color>
+
+    <color name="slate_background">#F1F5F9</color>
+    <color name="slate_text">#1E293B</color>
+    <color name="slate_text_secondary">#64748B</color>
+    <color name="slate_divider">#CBD5E1</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="green_total">#16A34A</color>
+    <color name="red_error">#DC2626</color>
+
+    <color name="ic_launcher_background">#2563EB</color>
+</resources>

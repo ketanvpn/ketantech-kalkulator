@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ketantech Kalkulator Servis</string>
+    <string name="title_settings">Pengaturan</string>
+
+    <!-- ===== Input Teknisi ===== -->
+    <string name="input_section_title">Data Servis</string>
+    <string name="input_device_hint">Nama/Tipe Perangkat (misal: Samsung A51)</string>
+    <string name="input_customer_hint">Nama Pelanggan (opsional)</string>
+    <string name="input_sparepart_hint">Modal Sparepart + Ongkir (Rp)</string>
+    <string name="input_level_title">Level Jasa</string>
+    <string name="input_level_1">Level 1 — Ringan (flashing, bypass)</string>
+    <string name="input_level_2">Level 2 — Menengah (LCD, baterai)</string>
+    <string name="input_level_3">Level 3 — Berat (IC, mati total)</string>
+    <string name="btn_new_receipt">✓ Nota Baru (Selesai &amp; Reset)</string>
+
+    <!-- ===== Nota Pelanggan ===== -->
+    <string name="receipt_store_name">Ketantech Store</string>
+    <string name="receipt_store_tagline">Estimasi Biaya Servis — Transparan &amp; Bergaransi</string>
+    <string name="receipt_no_device">-</string>
+    <string name="receipt_default_customer">Pelanggan</string>
+    <string name="receipt_customer_format">Pelanggan: %1$s</string>
+    <string name="receipt_sparepart">Suku Cadang / Komponen</string>
+    <string name="receipt_risk_fund">Garansi &amp; Quality Control</string>
+    <string name="receipt_operational">Bahan &amp; Alat Penunjang</string>
+    <string name="receipt_service_fee_level">Jasa Teknisi — Level %1$d</string>
+    <string name="receipt_total">TOTAL ESTIMASI</string>
+    <string name="receipt_warranty_message">Harga di atas adalah estimasi transparan. Biaya Garansi &amp; QC dialokasikan untuk jaminan pemasangan dan penggantian jika terjadi kegagalan komponen selama masa garansi. Garansi berlaku %1$d hari untuk jasa pemasangan dan komponen yang diganti.</string>
+    <string name="receipt_footer_thanks">Terima kasih atas kepercayaan Anda 🙏</string>
+
+    <!-- ===== Settings ===== -->
+    <string name="settings_section_pricing">Konfigurasi Harga</string>
+    <string name="settings_risk_margin">Persentase Garansi &amp; QC / Dana Risiko (%)</string>
+    <string name="settings_operational">Biaya Bahan &amp; Alat Penunjang (Rp)</string>
+    <string name="settings_level_1">Tarif Jasa Level 1 — Ringan (Rp)</string>
+    <string name="settings_level_2">Tarif Jasa Level 2 — Menengah (Rp)</string>
+    <string name="settings_level_3">Tarif Jasa Level 3 — Berat (Rp)</string>
+    <string name="settings_section_warranty">Durasi Garansi per Level</string>
+    <string name="settings_warranty_l1">Garansi Level 1 (hari)</string>
+    <string name="settings_warranty_l2">Garansi Level 2 (hari)</string>
+    <string name="settings_warranty_l3">Garansi Level 3 (hari)</string>
+    <string name="btn_save_settings">Simpan Pengaturan</string>
+    <string name="btn_reset_defaults">Reset ke Default</string>
+    <string name="settings_saved">Pengaturan tersimpan</string>
+    <string name="settings_reset_title">Reset Pengaturan?</string>
+    <string name="settings_reset_message">Semua nilai akan dikembalikan ke default awal. Tindakan ini tidak dapat dibatalkan.</string>
+    <string name="settings_reset_confirm">Ya, Reset</string>
+    <string name="settings_reset_done">Pengaturan dikembalikan ke default</string>
+
+    <!-- Content descriptions -->
+    <string name="desc_logo">Logo Ketantech Store</string>
+    <string name="desc_settings">Buka Pengaturan</string>
+</resources>

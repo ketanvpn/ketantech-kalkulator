@@ -1,0 +1,23 @@
+# Gradle & build output
+.gradle/
+build/
+*/build/
+/captures
+
+# Local config
+local.properties
+*.iml
+.idea/
+.cxx/
+
+# Keystore (jangan pernah commit!)
+*.jks
+*.keystore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# APK hasil build manual
+*.apk
+*.aab
