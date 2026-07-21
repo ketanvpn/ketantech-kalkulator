@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="new_receipt"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_note"
+        android:shortcutShortLabel="@string/shortcut_new_receipt"
+        android:shortcutLongLabel="@string/shortcut_new_receipt_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.ketantech.kalkulatorservis"
+            android:targetClass="com.ketantech.kalkulatorservis.MainActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

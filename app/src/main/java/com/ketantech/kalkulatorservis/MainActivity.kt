@@ -31,6 +31,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Cek onboarding: hanya tampil sekali saat pertama install
+        val onboardingPrefs = OnboardingPrefs(this)
+        if (!onboardingPrefs.hasSeenOnboarding) {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+        }
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -43,7 +50,36 @@ class MainActivity : AppCompatActivity() {
         // Pulihkan input setelah rotasi layar (PRD 8: rotasi tidak menghilangkan input)
         savedInstanceState?.let { restoreState(it) }
 
-        recalculate()
+        // Skeleton loading: sembunyikan konten, tampilkan skeleton sebentar
+        showSkeletonThenContent()
+    }
+
+    /** Tampilkan skeleton loading 600ms, lalu fade ke konten asli. */
+    private fun showSkeletonThenContent() {
+        binding.layoutSkeleton.visibility = View.VISIBLE
+        binding.layoutEmptyState.visibility = View.GONE
+        binding.layoutReceiptContent.visibility = View.GONE
+
+        binding.root.postDelayed({
+            // Fade out skeleton
+            binding.layoutSkeleton.animate()
+                .alpha(0f)
+                .setDuration(200)
+                .withEndAction {
+                    binding.layoutSkeleton.visibility = View.GONE
+                    binding.layoutSkeleton.alpha = 1f
+
+                    // Tampilkan konten sesuai state
+                    recalculate()
+
+                    // Fade in konten
+                    val target = if (binding.layoutEmptyState.visibility == View.VISIBLE)
+                        binding.layoutEmptyState else binding.layoutReceiptContent
+                    target.alpha = 0f
+                    target.animate().alpha(1f).setDuration(300).start()
+                }
+                .start()
+        }, 600)
     }
 
     override fun onResume() {
@@ -104,10 +140,39 @@ class MainActivity : AppCompatActivity() {
             clearInputs()
             // Haptic feedback untuk aksi penting
             it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
+            // Success animation (UI/UX delight)
+            showSuccessAnimation()
         }
         binding.btnShareReceipt.setOnClickListener {
             shareReceiptAsText()
         }
+    }
+
+    /** Animasi success: scale up + fade, lalu hilang. */
+    private fun showSuccessAnimation() {
+        binding.layoutSuccessOverlay.visibility = View.VISIBLE
+        binding.layoutSuccessOverlay.alpha = 0f
+        binding.layoutSuccessOverlay.scaleX = 0.5f
+        binding.layoutSuccessOverlay.scaleY = 0.5f
+
+        binding.layoutSuccessOverlay.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(300)
+            .withEndAction {
+                // Tahan sebentar, lalu fade out
+                binding.layoutSuccessOverlay.postDelayed({
+                    binding.layoutSuccessOverlay.animate()
+                        .alpha(0f)
+                        .setDuration(200)
+                        .withEndAction {
+                            binding.layoutSuccessOverlay.visibility = View.GONE
+                        }
+                        .start()
+                }, 1200)
+            }
+            .start()
     }
 
     /** Format nota sebagai teks siap share ke WhatsApp. */

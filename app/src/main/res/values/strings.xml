@@ -34,6 +34,18 @@
     <string name="empty_state_title">Belum Ada Data Servis</string>
     <string name="empty_state_message">Isi form di atas untuk melihat estimasi biaya.\nNota akan muncul di sini secara otomatis.</string>
 
+    <!-- Success -->
+    <string name="success_message">Nota baru siap!</string>
+    <string name="desc_success">Berhasil</string>
+
+    <!-- Onboarding -->
+    <string name="btn_skip">Lewati</string>
+    <string name="btn_next">Lanjut</string>
+
+    <!-- App Shortcut -->
+    <string name="shortcut_new_receipt">Nota Baru</string>
+    <string name="shortcut_new_receipt_long">Buat Nota Servis Baru</string>
+
     <!-- ===== Settings ===== -->
     <string name="settings_section_pricing">Konfigurasi Harga</string>
     <string name="settings_risk_margin">Persentase Garansi &amp; QC / Dana Risiko (%)</string>

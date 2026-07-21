@@ -190,6 +190,98 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <!-- Success Overlay: animasi checkmark saat nota baru -->
+                <FrameLayout
+                    android:id="@+id/layoutSuccessOverlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/success_circle"
+                            android:contentDescription="@string/desc_success"
+                            android:src="@drawable/ic_check"
+                            app:tint="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/success_message"
+                            android:textColor="@color/green_total"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <!-- Skeleton Loading (tampil saat pertama buka) -->
+                <LinearLayout
+                    android:id="@+id/layoutSkeleton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Skeleton logo -->
+                    <View
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/skeleton_placeholder" />
+
+                    <!-- Skeleton title -->
+                    <View
+                        android:layout_width="140dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/skeleton_placeholder" />
+
+                    <!-- Skeleton subtitle -->
+                    <View
+                        android:layout_width="200dp"
+                        android:layout_height="14dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/skeleton_placeholder" />
+
+                    <!-- Skeleton lines -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/skeleton_placeholder" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/skeleton_placeholder" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/skeleton_placeholder" />
+
+                    <!-- Skeleton total -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/skeleton_placeholder" />
+                </LinearLayout>
+
                 <!-- Empty State: panduan saat belum ada input -->
                 <LinearLayout
                     android:id="@+id/layoutEmptyState"
