@@ -33,6 +33,30 @@
             android:exported="false"
             android:label="@string/title_settings"
             android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false"
+            android:label="@string/title_history"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".TemplatesActivity"
+            android:exported="false"
+            android:label="@string/title_templates"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".CustomersActivity"
+            android:exported="false"
+            android:label="@string/title_customers"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ReportActivity"
+            android:exported="false"
+            android:label="@string/title_report"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

@@ -5,8 +5,17 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.ketantech.kalkulatorservis.data.AppRepository
+import com.ketantech.kalkulatorservis.data.Customer
+import com.ketantech.kalkulatorservis.data.Receipt
+import com.ketantech.kalkulatorservis.data.ServiceTemplate
 import com.ketantech.kalkulatorservis.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,6 +30,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: SettingsPrefs
     private lateinit var receiptGen: ReceiptNumberGenerator
+    private val repository: AppRepository by lazy { AppRepository(this) }
+
+    private var knownCustomers: List<Customer> = emptyList()
+    private var customerAdapter: ArrayAdapter<String>? = null
+
+    /** Terima template yang dipilih dari TemplatesActivity. */
+    private val pickTemplate = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data = result.data ?: return@registerForActivityResult
+            val template = ServiceTemplate(
+                id = data.getLongExtra(TemplatesActivity.EXTRA_TEMPLATE_ID, 0),
+                name = data.getStringExtra(TemplatesActivity.EXTRA_TEMPLATE_NAME) ?: "",
+                deviceName = data.getStringExtra(TemplatesActivity.EXTRA_TEMPLATE_DEVICE) ?: "",
+                sparepartCost = data.getLongExtra(TemplatesActivity.EXTRA_TEMPLATE_SPAREPART, 0),
+                serviceLevel = data.getIntExtra(TemplatesActivity.EXTRA_TEMPLATE_LEVEL, 1)
+            )
+            applyTemplate(template)
+        }
+    }
 
     private val rupiah: NumberFormat =
         NumberFormat.getCurrencyInstance(Locale("in", "ID")).apply {
@@ -51,6 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         setupInputs()
         setupButtons()
+        observeCustomers()
 
         // Pulihkan input setelah rotasi layar
         savedInstanceState?.let { restoreState(it) }
@@ -107,6 +138,22 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+        binding.btnHistory.setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
+        }
+
+        binding.btnTemplates.setOnClickListener {
+            pickTemplate.launch(Intent(this, TemplatesActivity::class.java))
+        }
+
+        binding.btnCustomers.setOnClickListener {
+            startActivity(Intent(this, CustomersActivity::class.java))
+        }
+
+        binding.btnReport.setOnClickListener {
+            startActivity(Intent(this, ReportActivity::class.java))
+        }
+
         binding.btnCalculate.setOnClickListener {
             it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
             hasCalculated = true
@@ -115,12 +162,125 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnNewReceipt.setOnClickListener {
+            it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
+            saveCurrentReceipt()
+        }
+
+        binding.btnSaveTemplate.setOnClickListener {
+            showSaveTemplateDialog()
+        }
+    }
+
+    /** Simpan nota ke database, lalu reset form untuk nota berikutnya. */
+    private fun saveCurrentReceipt() {
+        val result = currentResult ?: run {
+            // Belum pernah hitung: cukup konsumsi nomor & bersihkan
             receiptGen.consumeNext()
             clearInputs()
-            hasCalculated = false
-            it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
             showSuccessAnimation()
+            return
         }
+
+        val receiptNumber = receiptGen.consumeNext()
+        val device = binding.etDeviceName.text.toString().trim()
+        val customer = binding.etCustomerName.text.toString().trim()
+
+        val receipt = Receipt(
+            receiptNumber = receiptNumber,
+            deviceName = device,
+            customerName = customer,
+            sparepartCost = result.sparepartCost,
+            riskFund = result.riskFund,
+            operationalCost = result.operationalCost,
+            serviceFee = result.serviceFee,
+            total = result.total,
+            serviceLevel = currentLevel.tier,
+            warrantyDays = currentWarrantyDays
+        )
+
+        lifecycleScope.launch {
+            repository.saveReceipt(receipt)
+            if (customer.isNotEmpty()) {
+                repository.upsertCustomer(customer)
+            }
+        }
+
+        clearInputs()
+        showSuccessAnimation()
+    }
+
+    /** Auto-complete nama pelanggan dari database. */
+    private fun observeCustomers() {
+        val actv = binding.etCustomerName as? android.widget.AutoCompleteTextView ?: return
+        lifecycleScope.launch {
+            repository.getAllCustomers().collect { customers ->
+                knownCustomers = customers
+                customerAdapter = ArrayAdapter(
+                    this@MainActivity,
+                    android.R.layout.simple_dropdown_item_1line,
+                    customers.map { it.name }
+                )
+                actv.setAdapter(customerAdapter)
+                actv.threshold = 1
+            }
+        }
+    }
+
+    /** Dialog simpan input saat ini sebagai template. */
+    private fun showSaveTemplateDialog() {
+        val input = EditText(this).apply {
+            hint = getString(R.string.template_name_hint)
+            val device = binding.etDeviceName.text.toString().trim()
+            if (device.isNotEmpty()) setText(device)
+            setSelectAllOnFocus(true)
+        }
+
+        val container = android.widget.FrameLayout(this)
+        val pad = (20 * resources.displayMetrics.density).toInt()
+        container.setPadding(pad, pad / 2, pad, 0)
+        container.addView(input)
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.template_save_title)
+            .setView(container)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                val name = input.text.toString().trim()
+                if (name.isEmpty()) return@setPositiveButton
+                val template = ServiceTemplate(
+                    name = name,
+                    deviceName = binding.etDeviceName.text.toString().trim(),
+                    sparepartCost = ThousandSeparatorTextWatcher.parse(
+                        binding.etSparepartCost.text.toString()
+                    ),
+                    serviceLevel = selectedLevel().tier
+                )
+                lifecycleScope.launch {
+                    repository.saveTemplate(template)
+                    Toast.makeText(
+                        this@MainActivity,
+                        R.string.template_saved,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    /** Terapkan template ke form (dipanggil dari TemplatesActivity). */
+    fun applyTemplate(template: ServiceTemplate) {
+        binding.etDeviceName.setText(template.deviceName)
+        binding.etSparepartCost.setText(
+            if (template.sparepartCost > 0)
+                ThousandSeparatorTextWatcher.format(template.sparepartCost)
+            else ""
+        )
+        when (template.serviceLevel) {
+            2 -> binding.rbLevel2.isChecked = true
+            3 -> binding.rbLevel3.isChecked = true
+            else -> binding.rbLevel1.isChecked = true
+        }
+        Toast.makeText(this, R.string.template_applied, Toast.LENGTH_SHORT).show()
     }
 
     /** Simpan data terkini untuk ditampilkan di popup. */

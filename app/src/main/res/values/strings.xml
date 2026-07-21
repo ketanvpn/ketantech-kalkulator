@@ -48,6 +48,64 @@
     <string name="shortcut_new_receipt">Nota Baru</string>
     <string name="shortcut_new_receipt_long">Buat Nota Servis Baru</string>
 
+    <!-- History -->
+    <string name="title_history">Riwayat Nota</string>
+    <string name="search_hint">Cari nota, perangkat, atau pelanggan...</string>
+    <string name="stats_today">Servis Hari Ini</string>
+    <string name="stats_revenue">Omzet Hari Ini</string>
+    <string name="empty_history">Belum ada riwayat nota</string>
+    <string name="delete_title">Hapus Nota?</string>
+    <string name="delete_message">Nota %1$s akan dihapus permanen.</string>
+    <string name="delete_confirm">Hapus</string>
+    <string name="desc_delete">Hapus</string>
+    <string name="desc_history">Riwayat Nota</string>
+
+    <!-- Menu utama -->
+    <string name="menu_templates">Template</string>
+    <string name="menu_customers">Pelanggan</string>
+    <string name="menu_report">Laporan</string>
+    <string name="desc_menu_templates">Template Servis</string>
+    <string name="desc_menu_customers">Database Pelanggan</string>
+    <string name="desc_menu_report">Laporan Harian</string>
+    <string name="btn_save_template">Simpan sebagai Template</string>
+
+    <!-- Templates -->
+    <string name="title_templates">Template Servis</string>
+    <string name="template_hint_header">Ketuk "Pakai" untuk mengisi form otomatis, lalu tinggal tambah nama pelanggan.</string>
+    <string name="template_apply">Pakai</string>
+    <string name="empty_templates">Belum ada template.\nSimpan input sebagai template dari layar utama.</string>
+    <string name="template_save_title">Simpan Template</string>
+    <string name="template_name_hint">Nama template (misal: Ganti LCD Samsung A51)</string>
+    <string name="template_saved">Template tersimpan</string>
+    <string name="template_applied">Template diterapkan</string>
+    <string name="template_delete_title">Hapus Template?</string>
+    <string name="template_delete_message">Template \"%1$s\" akan dihapus permanen.</string>
+    <string name="template_default_badge">Bawaan</string>
+    <string name="template_level_format">Level %1$d</string>
+
+    <!-- Customers -->
+    <string name="title_customers">Database Pelanggan</string>
+    <string name="search_customer_hint">Cari nama pelanggan...</string>
+    <string name="empty_customers">Belum ada pelanggan.\nNama pelanggan tersimpan otomatis saat nota dibuat.</string>
+    <string name="customer_service_count">%1$d kali servis</string>
+    <string name="customer_last_service">Terakhir: %1$s</string>
+    <string name="customer_history_title">Riwayat Servis: %1$s</string>
+    <string name="customer_no_history">Belum ada riwayat servis.</string>
+    <string name="customer_delete_title">Hapus Pelanggan?</string>
+    <string name="customer_delete_message">Pelanggan \"%1$s\" akan dihapus. Riwayat nota tetap tersimpan.</string>
+
+    <!-- Report -->
+    <string name="title_report">Laporan</string>
+    <string name="report_today">Hari Ini</string>
+    <string name="report_week">7 Hari Terakhir</string>
+    <string name="report_month">30 Hari Terakhir</string>
+    <string name="report_revenue">Omzet</string>
+    <string name="report_service_count">Jumlah Servis</string>
+    <string name="report_by_level">Rincian per Level Hari Ini</string>
+    <string name="report_level_format">Level %1$d</string>
+    <string name="report_empty_level">Belum ada servis hari ini.</string>
+    <string name="report_avg_per_service">Rata-rata per servis</string>
+
     <!-- ===== Settings ===== -->
     <string name="settings_section_pricing">Konfigurasi Harga</string>
     <string name="settings_risk_margin">Persentase Garansi &amp; QC / Dana Risiko (%)</string>

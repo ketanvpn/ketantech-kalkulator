@@ -39,6 +39,66 @@
                 app:tint="@color/slate_text_secondary" />
         </LinearLayout>
 
+        <!-- ================= MENU FITUR ================= -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHistory"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="@string/title_history"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_history"
+                app:iconSize="16dp"
+                app:iconPadding="4dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTemplates"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/menu_templates"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_template"
+                app:iconSize="16dp"
+                app:iconPadding="4dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCustomers"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/menu_customers"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_people"
+                app:iconSize="16dp"
+                app:iconPadding="4dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReport"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="@string/menu_report"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_chart"
+                app:iconSize="16dp"
+                app:iconPadding="4dp" />
+        </LinearLayout>
+
         <!-- ================= INPUT TEKNISI ================= -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -85,13 +145,14 @@
                     android:hint="@string/input_customer_hint"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                         android:id="@+id/etCustomerName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text|textCapWords"
                         android:maxLength="100"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        android:completionThreshold="1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -170,6 +231,15 @@
                         android:layout_weight="1"
                         android:text="@string/btn_new_receipt" />
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveTemplate"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/btn_save_template"
+                    android:textSize="13sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
