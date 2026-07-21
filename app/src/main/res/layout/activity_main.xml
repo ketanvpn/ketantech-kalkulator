@@ -232,9 +232,9 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="2dp">
 
             <LinearLayout
@@ -243,19 +243,59 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Header kartu: ikon + judul + subtitle -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/input_section_title"
-                    android:textColor="@color/blue_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/badge_background"
+                        android:contentDescription="@string/input_section_title"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_device"
+                        app:tint="@color/blue_primary" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/input_section_title"
+                            android:textColor="@color/slate_text"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/input_section_subtitle"
+                            android:textColor="@color/slate_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Garis pembatas -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@color/slate_divider" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:hint="@string/input_device_hint"
+                    app:startIconDrawable="@drawable/ic_device"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -270,8 +310,9 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:hint="@string/input_customer_hint"
+                    app:startIconDrawable="@drawable/ic_people"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -287,9 +328,10 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:hint="@string/input_sparepart_hint"
                     app:prefixText="Rp "
+                    app:startIconDrawable="@drawable/ic_sparepart"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -309,66 +351,180 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <!-- RadioGroup tersembunyi untuk state (kompatibel dgn selectedLevel()) -->
                 <RadioGroup
                     android:id="@+id/rgServiceLevel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbLevel1"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/input_level_1" />
+                        android:checked="true" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbLevel2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/input_level_2" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbLevel3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/input_level_3" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </RadioGroup>
 
-                <!-- Tombol aksi utama -->
+                <!-- Grid level 3 kolom (UI) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCalculate"
+                    <LinearLayout
+                        android:id="@+id/cardLevel1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/btn_calculate"
-                        app:icon="@drawable/ic_calculate"
-                        app:iconSize="20dp" />
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/level_card_bg_selected"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnNewReceipt"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        <TextView
+                            android:id="@+id/tvLevel1Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="L1"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvLevel1Sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/level_short_1"
+                            android:textColor="@color/white"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cardLevel2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/btn_new_receipt" />
+                        android:layout_marginHorizontal="6dp"
+                        android:background="@drawable/level_card_bg"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <TextView
+                            android:id="@+id/tvLevel2Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="L2"
+                            android:textColor="@color/slate_text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvLevel2Sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/level_short_2"
+                            android:textColor="@color/slate_text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/cardLevel3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/level_card_bg"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp">
+
+                        <TextView
+                            android:id="@+id/tvLevel3Title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="L3"
+                            android:textColor="@color/slate_text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvLevel3Sub"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/level_short_3"
+                            android:textColor="@color/slate_text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/level_hint"
+                    android:textColor="@color/slate_text_secondary"
+                    android:textSize="11sp" />
+
+                <!-- Tombol aksi utama -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCalculate"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/btn_calculate"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:icon="@drawable/ic_calculate"
+                    app:iconSize="22dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnNewReceipt"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/btn_new_receipt" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveTemplate"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/btn_save_template"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    app:icon="@drawable/ic_template"
+                    app:iconSize="18dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

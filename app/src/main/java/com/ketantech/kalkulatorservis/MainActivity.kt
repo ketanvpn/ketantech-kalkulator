@@ -127,8 +127,44 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
+        // Level card UI: klik kartu → sync RadioGroup tersembunyi + update visual
+        setupLevelCards()
+    }
+
+    /** Sinkronkan tampilan kartu level dengan RadioGroup tersembunyi. */
+    private fun setupLevelCards() {
+        val cards = listOf(binding.cardLevel1, binding.cardLevel2, binding.cardLevel3)
+        val radios = listOf(binding.rbLevel1, binding.rbLevel2, binding.rbLevel3)
+        val titleViews = listOf(binding.tvLevel1Title, binding.tvLevel2Title, binding.tvLevel3Title)
+        val subViews = listOf(binding.tvLevel1Sub, binding.tvLevel2Sub, binding.tvLevel3Sub)
+
+        fun refresh() {
+            for (i in cards.indices) {
+                val selected = radios[i].isChecked
+                cards[i].setBackgroundResource(
+                    if (selected) R.drawable.level_card_bg_selected
+                    else R.drawable.level_card_bg
+                )
+                val color = if (selected) R.color.white else R.color.slate_text
+                val subColor = if (selected) R.color.white else R.color.slate_text_secondary
+                titleViews[i].setTextColor(androidx.core.content.ContextCompat.getColor(this, color))
+                subViews[i].setTextColor(androidx.core.content.ContextCompat.getColor(this, subColor))
+            }
+        }
+
+        for (i in cards.indices) {
+            cards[i].setOnClickListener {
+                it.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_TICK)
+                radios[i].isChecked = true
+                refresh()
+            }
+        }
+
+        // Sinkron awal
+        refresh()
         binding.rgServiceLevel.setOnCheckedChangeListener { group, _ ->
             group.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_TICK)
+            refresh()
             updateCurrentData()
         }
     }

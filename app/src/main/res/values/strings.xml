@@ -5,16 +5,21 @@
 
     <!-- ===== Input Teknisi ===== -->
     <string name="input_section_title">Data Servis</string>
-    <string name="input_device_hint">Nama/Tipe Perangkat (misal: Samsung A51)</string>
-    <string name="input_customer_hint">Nama Pelanggan (opsional)</string>
-    <string name="input_sparepart_hint">Modal Sparepart + Ongkir (Rp)</string>
+    <string name="input_section_subtitle">Isi detail perangkat &amp; layanan</string>
+    <string name="input_device_hint">Perangkat (mis. Samsung A51)</string>
+    <string name="input_customer_hint">Nama Pelanggan</string>
+    <string name="input_sparepart_hint">Modal Sparepart + Ongkir</string>
     <string name="input_level_title">Level Jasa</string>
     <string name="input_level_1">Level 1 — Ringan (flashing, bypass)</string>
     <string name="input_level_2">Level 2 — Menengah (LCD, baterai)</string>
     <string name="input_level_3">Level 3 — Berat (IC, mati total)</string>
-    <string name="btn_new_receipt">✓ Nota Baru</string>
+    <string name="level_short_1">Ringan</string>
+    <string name="level_short_2">Menengah</string>
+    <string name="level_short_3">Berat</string>
+    <string name="level_hint">L1: flashing/bypass • L2: LCD/baterai • L3: IC/mati total</string>
+    <string name="btn_new_receipt">Simpan &amp; Baru</string>
     <string name="btn_share_receipt">Bagikan</string>
-    <string name="btn_calculate">🧮 Hitung</string>
+    <string name="btn_calculate">Hitung</string>
     <string name="btn_done">Selesai</string>
 
     <!-- ===== Nota Pelanggan ===== -->
