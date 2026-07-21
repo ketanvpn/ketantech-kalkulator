@@ -15,6 +15,7 @@
     <string name="btn_new_receipt">✓ Nota Baru</string>
     <string name="btn_share_receipt">Bagikan</string>
     <string name="btn_calculate">🧮 Hitung</string>
+    <string name="btn_done">Selesai</string>
 
     <!-- ===== Nota Pelanggan ===== -->
     <string name="receipt_store_name">Ketantech Store</string>

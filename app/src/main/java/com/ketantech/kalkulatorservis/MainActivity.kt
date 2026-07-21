@@ -13,8 +13,8 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * Layar utama: kalkulator input teknisi (atas) + nota pelanggan (bawah).
- * Nota ter-update real-time saat input berubah (PRD 11.2).
+ * Layar utama: kalkulator input teknisi.
+ * Nota ditampilkan sebagai popup bottom sheet saat klik HITUNG.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +28,11 @@ class MainActivity : AppCompatActivity() {
         }
     private val displayDateFormat =
         SimpleDateFormat("d MMMM yyyy", Locale("in", "ID"))
+
+    private var hasCalculated = false
+    private var currentResult: CalculationResult? = null
+    private var currentLevel: ServiceLevel = ServiceLevel.LEVEL_1
+    private var currentWarrantyDays: Int = 7
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,43 +52,11 @@ class MainActivity : AppCompatActivity() {
         setupInputs()
         setupButtons()
 
-        // Pulihkan input setelah rotasi layar (PRD 8: rotasi tidak menghilangkan input)
+        // Pulihkan input setelah rotasi layar
         savedInstanceState?.let { restoreState(it) }
 
-        // Skeleton loading: sembunyikan konten, tampilkan skeleton sebentar
+        // Skeleton loading
         showSkeletonThenContent()
-    }
-
-    /** Tampilkan skeleton loading 600ms, lalu fade ke konten asli. */
-    private fun showSkeletonThenContent() {
-        binding.layoutSkeleton.visibility = View.VISIBLE
-        binding.layoutEmptyState.visibility = View.GONE
-        binding.layoutReceiptContent.visibility = View.GONE
-        binding.cardReceipt.visibility = View.GONE
-        binding.btnShareReceipt.visibility = View.GONE
-
-        binding.root.postDelayed({
-            // Fade out skeleton
-            binding.layoutSkeleton.animate()
-                .alpha(0f)
-                .setDuration(200)
-                .withEndAction {
-                    binding.layoutSkeleton.visibility = View.GONE
-                    binding.layoutSkeleton.alpha = 1f
-
-                    // Tampilkan empty state (nota disembunyikan sampai klik Hitung)
-                    binding.layoutEmptyState.visibility = View.VISIBLE
-                    binding.layoutEmptyState.alpha = 0f
-                    binding.layoutEmptyState.animate().alpha(1f).setDuration(300).start()
-                }
-                .start()
-        }, 600)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Settings mungkin berubah di SettingsActivity — hitung ulang
-        recalculate()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -105,42 +78,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var hasCalculated = false
-
     private fun setupInputs() {
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                // Jika sudah pernah hitung, update real-time. Jika belum, sembunyikan nota.
-                if (hasCalculated) {
-                    recalculate()
-                } else {
-                    hideReceipt()
-                }
+                // Update data terbaru untuk next calculate
+                updateCurrentData()
             }
         }
         binding.etDeviceName.addTextChangedListener(watcher)
         binding.etCustomerName.addTextChangedListener(watcher)
 
-        // Format ribuan otomatis untuk modal sparepart (UI/UX improvement)
         binding.etSparepartCost.addTextChangedListener(
             ThousandSeparatorTextWatcher(binding.etSparepartCost) { _ ->
-                if (hasCalculated) {
-                    recalculate()
-                } else {
-                    hideReceipt()
-                }
+                updateCurrentData()
             }
         )
 
         binding.rgServiceLevel.setOnCheckedChangeListener { group, _ ->
             group.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_TICK)
-            if (hasCalculated) {
-                recalculate()
-            } else {
-                hideReceipt()
-            }
+            updateCurrentData()
         }
     }
 
@@ -150,93 +108,57 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnCalculate.setOnClickListener {
-            // Haptic feedback kuat untuk aksi utama
             it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
             hasCalculated = true
-            recalculate()
-            showReceiptWithAnimation()
+            updateCurrentData()
+            showReceiptPopup()
         }
 
         binding.btnNewReceipt.setOnClickListener {
             receiptGen.consumeNext()
             clearInputs()
             hasCalculated = false
-            hideReceipt()
             it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
             showSuccessAnimation()
         }
-
-        binding.btnShareReceipt.setOnClickListener {
-            shareReceiptAsText()
-        }
     }
 
-    /** Tampilkan nota dengan animasi slide up + fade in. */
-    private fun showReceiptWithAnimation() {
-        binding.cardReceipt.visibility = View.VISIBLE
-        binding.btnShareReceipt.visibility = View.VISIBLE
-
-        binding.cardReceipt.alpha = 0f
-        binding.cardReceipt.translationY = 100f
-
-        binding.cardReceipt.animate()
-            .alpha(1f)
-            .translationY(0f)
-            .setDuration(400)
-            .start()
-
-        // Auto-scroll ke nota setelah animasi selesai
-        binding.root.postDelayed({
-            binding.scrollView.smoothScrollTo(0, binding.cardReceipt.top - 32)
-        }, 450)
-    }
-
-    /** Sembunyikan nota. */
-    private fun hideReceipt() {
-        binding.cardReceipt.visibility = View.GONE
-        binding.btnShareReceipt.visibility = View.GONE
-    }
-
-    /** Animasi success: scale up + fade, lalu hilang. */
-    private fun showSuccessAnimation() {
-        binding.layoutSuccessOverlay.visibility = View.VISIBLE
-        binding.layoutSuccessOverlay.alpha = 0f
-        binding.layoutSuccessOverlay.scaleX = 0.5f
-        binding.layoutSuccessOverlay.scaleY = 0.5f
-
-        binding.layoutSuccessOverlay.animate()
-            .alpha(1f)
-            .scaleX(1f)
-            .scaleY(1f)
-            .setDuration(300)
-            .withEndAction {
-                // Tahan sebentar, lalu fade out
-                binding.layoutSuccessOverlay.postDelayed({
-                    binding.layoutSuccessOverlay.animate()
-                        .alpha(0f)
-                        .setDuration(200)
-                        .withEndAction {
-                            binding.layoutSuccessOverlay.visibility = View.GONE
-                        }
-                        .start()
-                }, 1200)
-            }
-            .start()
-    }
-
-    /** Format nota sebagai teks siap share ke WhatsApp. */
-    private fun shareReceiptAsText() {
+    /** Simpan data terkini untuk ditampilkan di popup. */
+    private fun updateCurrentData() {
         val sparepartText = binding.etSparepartCost.text.toString()
         val sparepart = ThousandSeparatorTextWatcher.parse(sparepartText)
-        val level = selectedLevel()
-        val serviceFee = PriceCalculator.feeForLevel(level, prefs)
-        val warrantyDays = PriceCalculator.warrantyDaysForLevel(level, prefs)
-        val result = PriceCalculator.calculate(
+        currentLevel = selectedLevel()
+        val serviceFee = PriceCalculator.feeForLevel(currentLevel, prefs)
+        currentWarrantyDays = PriceCalculator.warrantyDaysForLevel(currentLevel, prefs)
+
+        currentResult = PriceCalculator.calculate(
             sparepartCost = sparepart,
             riskMarginPercent = prefs.riskMarginPercent,
             operationalCost = prefs.operationalCost,
             serviceFee = serviceFee
         )
+    }
+
+    /** Tampilkan nota sebagai popup bottom sheet. */
+    private fun showReceiptPopup() {
+        val result = currentResult ?: return
+
+        val bottomSheet = ReceiptBottomSheet.newInstance(
+            receiptNumber = receiptGen.peekNext(),
+            deviceName = binding.etDeviceName.text.toString().trim(),
+            customerName = binding.etCustomerName.text.toString().trim(),
+            result = result,
+            serviceLevel = currentLevel,
+            warrantyDays = currentWarrantyDays,
+            onShareClick = { shareReceiptAsText() },
+            onDoneClick = { /* tutup saja */ }
+        )
+        bottomSheet.show(supportFragmentManager, ReceiptBottomSheet.TAG)
+    }
+
+    /** Format nota sebagai teks siap share ke WhatsApp. */
+    private fun shareReceiptAsText() {
+        val result = currentResult ?: return
 
         val device = binding.etDeviceName.text.toString().trim()
         val customer = binding.etCustomerName.text.toString().trim()
@@ -259,13 +181,13 @@ class MainActivity : AppCompatActivity() {
             sb.appendLine("• Garansi & QC: ${rupiah.format(result.riskFund)}")
         }
         sb.appendLine("• Bahan Penunjang: ${rupiah.format(result.operationalCost)}")
-        sb.appendLine("• Jasa Teknisi L$level.tier: ${rupiah.format(result.serviceFee)}")
+        sb.appendLine("• Jasa Teknisi L${currentLevel.tier}: ${rupiah.format(result.serviceFee)}")
         sb.appendLine()
         sb.appendLine("─".repeat(28))
         sb.appendLine("💰 *TOTAL: ${rupiah.format(result.total)}*")
         sb.appendLine("─".repeat(28))
         sb.appendLine()
-        sb.appendLine("Garansi berlaku $warrantyDays hari untuk jasa pemasangan dan komponen yang diganti.")
+        sb.appendLine("Garansi berlaku $currentWarrantyDays hari untuk jasa pemasangan dan komponen yang diganti.")
         sb.appendLine()
         sb.appendLine("Terima kasih 🙏")
 
@@ -283,6 +205,7 @@ class MainActivity : AppCompatActivity() {
         binding.etSparepartCost.text?.clear()
         binding.rbLevel1.isChecked = true
         hasCalculated = false
+        currentResult = null
     }
 
     private fun selectedLevel(): ServiceLevel = when (binding.rgServiceLevel.checkedRadioButtonId) {
@@ -291,110 +214,49 @@ class MainActivity : AppCompatActivity() {
         else -> ServiceLevel.LEVEL_1
     }
 
-    /** Hitung ulang dan perbarui seluruh tampilan nota. */
-    private fun recalculate() {
-        // Parsing aman: string dengan separator ribuan ("450.000") atau kosong
-        val sparepartText = binding.etSparepartCost.text.toString()
-        val sparepart = ThousandSeparatorTextWatcher.parse(sparepartText)
-        val level = selectedLevel()
-        val serviceFee = PriceCalculator.feeForLevel(level, prefs)
-        val warrantyDays = PriceCalculator.warrantyDaysForLevel(level, prefs)
+    /** Tampilkan skeleton loading 600ms, lalu fade ke konten asli. */
+    private fun showSkeletonThenContent() {
+        binding.layoutSkeleton.visibility = View.VISIBLE
+        binding.layoutEmptyState.visibility = View.GONE
 
-        val result = PriceCalculator.calculate(
-            sparepartCost = sparepart,
-            riskMarginPercent = prefs.riskMarginPercent,
-            operationalCost = prefs.operationalCost,
-            serviceFee = serviceFee
-        )
-        renderReceipt(result, level, warrantyDays)
+        binding.root.postDelayed({
+            binding.layoutSkeleton.animate()
+                .alpha(0f)
+                .setDuration(200)
+                .withEndAction {
+                    binding.layoutSkeleton.visibility = View.GONE
+                    binding.layoutSkeleton.alpha = 1f
+
+                    binding.layoutEmptyState.visibility = View.VISIBLE
+                    binding.layoutEmptyState.alpha = 0f
+                    binding.layoutEmptyState.animate().alpha(1f).setDuration(300).start()
+                }
+                .start()
+        }, 600)
     }
 
-    private fun renderReceipt(
-        result: CalculationResult,
-        level: ServiceLevel,
-        warrantyDays: Int
-    ) {
-        // Info nota
-        binding.tvReceiptNumber.text = receiptGen.peekNext()
-        binding.tvReceiptDate.text = displayDateFormat.format(Date())
+    /** Animasi success: scale up + fade, lalu hilang. */
+    private fun showSuccessAnimation() {
+        binding.layoutSuccessOverlay.visibility = View.VISIBLE
+        binding.layoutSuccessOverlay.alpha = 0f
+        binding.layoutSuccessOverlay.scaleX = 0.5f
+        binding.layoutSuccessOverlay.scaleY = 0.5f
 
-        val device = binding.etDeviceName.text.toString().trim()
-        binding.tvReceiptDevice.text =
-            if (device.isEmpty()) getString(R.string.receipt_no_device) else device
-
-        val customer = binding.etCustomerName.text.toString().trim()
-        binding.tvReceiptCustomer.text = getString(
-            R.string.receipt_customer_format,
-            customer.ifEmpty { getString(R.string.receipt_default_customer) }
-        )
-
-        // Empty state: tampilkan panduan jika belum ada input sama sekali
-        val hasAnyInput = device.isNotEmpty() || customer.isNotEmpty() ||
-            binding.etSparepartCost.text.toString().isNotEmpty()
-        binding.layoutEmptyState.visibility = if (hasAnyInput) View.GONE else View.VISIBLE
-        binding.layoutReceiptContent.visibility = if (hasAnyInput) View.VISIBLE else View.GONE
-
-        // PRD 7.2: baris sparepart & garansi hanya muncul jika modal > 0
-        val sparepartVisibility = if (result.showSparepartRows) View.VISIBLE else View.GONE
-        binding.rowSparepart.visibility = sparepartVisibility
-        binding.rowRiskFund.visibility = sparepartVisibility
-
-        // Format currency dengan animasi perubahan halus (UI/UX improvement)
-        animateCurrencyChange(binding.tvSparepartValue, result.sparepartCost)
-        animateCurrencyChange(binding.tvRiskFundValue, result.riskFund)
-        animateCurrencyChange(binding.tvOperationalValue, result.operationalCost)
-
-        binding.tvServiceFeeLabel.text =
-            getString(R.string.receipt_service_fee_level, level.tier)
-        animateCurrencyChange(binding.tvServiceFeeValue, result.serviceFee)
-
-        // Hero total dengan emphasis khusus
-        animateTotalChange(result.total)
-
-        // Pesan edukasi dengan durasi garansi dinamis (PRD 5.2)
-        binding.tvWarrantyMessage.text =
-            getString(R.string.receipt_warranty_message, warrantyDays)
-    }
-
-    /** Animasi fade+slide halus saat nilai currency berubah. */
-    private fun animateCurrencyChange(view: android.widget.TextView, newValue: Long) {
-        val newText = rupiah.format(newValue)
-        if (view.text.toString() == newText) return
-
-        view.animate()
-            .alpha(0f)
-            .translationY(-8f)
-            .setDuration(120)
+        binding.layoutSuccessOverlay.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(300)
             .withEndAction {
-                view.text = newText
-                view.translationY = 8f
-                view.animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(180)
-                    .start()
-            }
-            .start()
-    }
-
-    /** Animasi khusus untuk total tagihan (lebih menonjol). */
-    private fun animateTotalChange(newTotal: Long) {
-        val newText = rupiah.format(newTotal)
-        if (binding.tvTotalValue.text.toString() == newText) return
-
-        binding.tvTotalValue.animate()
-            .alpha(0f)
-            .scaleX(0.95f)
-            .scaleY(0.95f)
-            .setDuration(150)
-            .withEndAction {
-                binding.tvTotalValue.text = newText
-                binding.tvTotalValue.animate()
-                    .alpha(1f)
-                    .scaleX(1f)
-                    .scaleY(1f)
-                    .setDuration(200)
-                    .start()
+                binding.layoutSuccessOverlay.postDelayed({
+                    binding.layoutSuccessOverlay.animate()
+                        .alpha(0f)
+                        .setDuration(200)
+                        .withEndAction {
+                            binding.layoutSuccessOverlay.visibility = View.GONE
+                        }
+                        .start()
+                }, 1200)
             }
             .start()
     }

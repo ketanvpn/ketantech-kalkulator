@@ -170,443 +170,138 @@
                         android:layout_weight="1"
                         android:text="@string/btn_new_receipt" />
                 </LinearLayout>
-
-                <!-- Tombol share (hanya muncul setelah hitung) -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnShareReceipt"
-                    style="@style/Widget.Material3.Button.TextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/btn_share_receipt"
-                    android:visibility="gone"
-                    app:icon="@drawable/ic_share"
-                    app:iconSize="18dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ================= NOTA PELANGGAN (Struk Style) ================= -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardReceipt"
+        <!-- ================= SUCCESS OVERLAY ================= -->
+        <FrameLayout
+            android:id="@+id/layoutSuccessOverlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="16dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="6dp"
-            app:strokeColor="@color/slate_divider"
-            app:strokeWidth="1dp">
+            android:visibility="gone">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <!-- Success Overlay: animasi checkmark saat nota baru -->
-                <FrameLayout
-                    android:id="@+id/layoutSuccessOverlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:visibility="gone">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:background="@drawable/success_circle"
-                            android:contentDescription="@string/desc_success"
-                            android:src="@drawable/ic_check"
-                            app:tint="@color/white" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="@string/success_message"
-                            android:textColor="@color/green_total"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </FrameLayout>
-
-                <!-- Skeleton Loading (tampil saat pertama buka) -->
-                <LinearLayout
-                    android:id="@+id/layoutSkeleton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <!-- Skeleton logo -->
-                    <View
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/skeleton_placeholder" />
-
-                    <!-- Skeleton title -->
-                    <View
-                        android:layout_width="140dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/skeleton_placeholder" />
-
-                    <!-- Skeleton subtitle -->
-                    <View
-                        android:layout_width="200dp"
-                        android:layout_height="14dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:background="@drawable/skeleton_placeholder" />
-
-                    <!-- Skeleton lines -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="16dp"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/skeleton_placeholder" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="16dp"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/skeleton_placeholder" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="16dp"
-                        android:layout_marginTop="12dp"
-                        android:background="@drawable/skeleton_placeholder" />
-
-                    <!-- Skeleton total -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/skeleton_placeholder" />
-                </LinearLayout>
-
-                <!-- Empty State: panduan saat belum ada input -->
-                <LinearLayout
-                    android:id="@+id/layoutEmptyState"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="24dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="📋"
-                        android:textSize="48sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/empty_state_title"
-                        android:textColor="@color/slate_text"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="@string/empty_state_message"
-                        android:textColor="@color/slate_text_secondary"
-                        android:textSize="13sp"
-                        android:lineSpacingExtra="4dp" />
-                </LinearLayout>
-
-                <!-- Konten Nota (disembunyikan saat empty state) -->
-                <LinearLayout
-                    android:id="@+id/layoutReceiptContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!-- Logo + nama toko -->
-                    <ImageView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_gravity="center_horizontal"
-                        android:contentDescription="@string/desc_logo"
-                        android:src="@drawable/ic_logo" />
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/success_circle"
+                    android:contentDescription="@string/desc_success"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/white" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="6dp"
-                    android:text="@string/receipt_store_name"
-                    android:textColor="@color/slate_text"
-                    android:textSize="18sp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/success_message"
+                    android:textColor="@color/green_total"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/receipt_store_tagline"
-                    android:textColor="@color/slate_text_secondary"
-                    android:textSize="11sp" />
-
-                <!-- Garis putus-putus ala struk -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@drawable/dashed_line" />
-
-                <!-- Nomor nota & tanggal -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvReceiptNumber"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="monospace"
-                        android:textColor="@color/slate_text_secondary"
-                        android:textSize="12sp"
-                        tools:text="KTS-20260721-001" />
-
-                    <TextView
-                        android:id="@+id/tvReceiptDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/slate_text_secondary"
-                        android:textSize="12sp"
-                        tools:text="21 Juli 2026" />
-                </LinearLayout>
-
-                <!-- Info perangkat & pelanggan -->
-                <TextView
-                    android:id="@+id/tvReceiptDevice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/slate_text"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    tools:text="Samsung A51" />
-
-                <TextView
-                    android:id="@+id/tvReceiptCustomer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/slate_text_secondary"
-                    android:textSize="13sp"
-                    tools:text="Pelanggan: Budi" />
-
-                <!-- Garis putus-putus -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@drawable/dashed_line" />
-
-                <!-- Header rincian -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/receipt_detail_header"
-                    android:textColor="@color/slate_text_secondary"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.15" />
-
-                <!-- Baris: Suku Cadang -->
-                <LinearLayout
-                    android:id="@+id/rowSparepart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/receipt_sparepart"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tvSparepartValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp"
-                        tools:text="Rp450.000" />
-                </LinearLayout>
-
-                <!-- Baris: Garansi & QC -->
-                <LinearLayout
-                    android:id="@+id/rowRiskFund"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/receipt_risk_fund"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tvRiskFundValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp"
-                        tools:text="Rp45.000" />
-                </LinearLayout>
-
-                <!-- Baris: Bahan Penunjang -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/receipt_operational"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tvOperationalValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp"
-                        tools:text="Rp20.000" />
-                </LinearLayout>
-
-                <!-- Baris: Jasa Teknisi -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvServiceFeeLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp"
-                        tools:text="Jasa Teknisi — Level 2" />
-
-                    <TextView
-                        android:id="@+id/tvServiceFeeValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textColor="@color/slate_text"
-                        android:textSize="14sp"
-                        tools:text="Rp150.000" />
-                </LinearLayout>
-
-                <!-- Garis putus-putus sebelum total -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@drawable/dashed_line" />
-
-                <!-- HERO TOTAL: Card khusus menonjol -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:background="@drawable/hero_total_background"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/receipt_total"
-                        android:textColor="@color/slate_text"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvTotalValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:textColor="@color/green_total"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        tools:text="Rp665.000" />
-                </LinearLayout>
-
-                <!-- Pesan edukasi -->
-                <TextView
-                    android:id="@+id/tvWarrantyMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@color/blue_light"
-                    android:padding="12dp"
-                    android:textColor="@color/slate_text"
-                    android:textSize="12sp"
-                    android:lineSpacingExtra="2dp"
-                    tools:text="Harga di atas adalah estimasi transparan. ... Garansi berlaku 30 hari ..." />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="14dp"
-                    android:text="@string/receipt_footer_thanks"
-                    android:textColor="@color/slate_text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Garis putus-putus penutup struk -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/dashed_line" />
-                </LinearLayout> <!-- end layoutReceiptContent -->
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
+
+        <!-- ================= EMPTY STATE ================= -->
+        <LinearLayout
+            android:id="@+id/layoutEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🧮"
+                android:textSize="56sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/empty_state_title"
+                android:textColor="@color/slate_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/empty_state_message"
+                android:textColor="@color/slate_text_secondary"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="👆"
+                android:textSize="32sp" />
+        </LinearLayout>
+
+        <!-- ================= SKELETON LOADING ================= -->
+        <LinearLayout
+            android:id="@+id/layoutSkeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <View
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/skeleton_placeholder" />
+
+            <View
+                android:layout_width="140dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/skeleton_placeholder" />
+
+            <View
+                android:layout_width="200dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/skeleton_placeholder" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/skeleton_placeholder" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/skeleton_placeholder" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/skeleton_placeholder" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/skeleton_placeholder" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
