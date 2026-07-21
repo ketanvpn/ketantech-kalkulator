@@ -31,7 +31,7 @@ jobs:
         run: ./gradlew testDebugUnitTest
 
       - name: Build APK Debug
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug -PVERSION_CODE=${{ github.run_number }} -PVERSION_NAME=ci-${{ github.run_number }}
 
       - name: Upload APK (Artifact)
         uses: actions/upload-artifact@v4

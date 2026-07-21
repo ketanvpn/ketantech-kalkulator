@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew testDebugUnitTest
 
       - name: Build APK Debug (untuk penggunaan pribadi)
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug -PVERSION_CODE=${{ github.run_number }} -PVERSION_NAME=${{ steps.version.outputs.VERSION }}
 
       - name: Cek file APK
         run: ls -la app/build/outputs/apk/debug/

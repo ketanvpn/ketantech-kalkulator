@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -144,40 +145,54 @@
                         android:text="@string/input_level_3" />
                 </RadioGroup>
 
-                <!-- Tombol aksi -->
+                <!-- Tombol aksi utama -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="16dp"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnShareReceipt"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:id="@+id/btnCalculate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:text="@string/btn_share_receipt"
-                        app:icon="@drawable/ic_share"
-                        app:iconSize="18dp" />
+                        android:text="@string/btn_calculate"
+                        app:icon="@drawable/ic_calculate"
+                        app:iconSize="20dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNewReceipt"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/btn_new_receipt" />
                 </LinearLayout>
+
+                <!-- Tombol share (hanya muncul setelah hitung) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShareReceipt"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/btn_share_receipt"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_share"
+                    app:iconSize="18dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- ================= NOTA PELANGGAN (Struk Style) ================= -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardReceipt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="16dp"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="4dp"
             app:cardElevation="6dp"

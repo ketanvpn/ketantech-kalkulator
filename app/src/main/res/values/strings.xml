@@ -14,6 +14,7 @@
     <string name="input_level_3">Level 3 — Berat (IC, mati total)</string>
     <string name="btn_new_receipt">✓ Nota Baru</string>
     <string name="btn_share_receipt">Bagikan</string>
+    <string name="btn_calculate">🧮 Hitung</string>
 
     <!-- ===== Nota Pelanggan ===== -->
     <string name="receipt_store_name">Ketantech Store</string>

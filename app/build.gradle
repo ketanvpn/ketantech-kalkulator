@@ -11,8 +11,9 @@ android {
         applicationId "com.ketantech.kalkulatorservis"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0.0"
+        // versionCode: naik otomatis dari CI run number, atau 1 untuk lokal
+        versionCode project.hasProperty("VERSION_CODE") ? VERSION_CODE.toInteger() : 1
+        versionName project.hasProperty("VERSION_NAME") ? VERSION_NAME : "1.0.0-dev"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

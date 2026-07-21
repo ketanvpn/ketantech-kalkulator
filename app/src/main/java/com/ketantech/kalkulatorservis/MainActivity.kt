@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         binding.layoutSkeleton.visibility = View.VISIBLE
         binding.layoutEmptyState.visibility = View.GONE
         binding.layoutReceiptContent.visibility = View.GONE
+        binding.cardReceipt.visibility = View.GONE
+        binding.btnShareReceipt.visibility = View.GONE
 
         binding.root.postDelayed({
             // Fade out skeleton
@@ -69,14 +71,10 @@ class MainActivity : AppCompatActivity() {
                     binding.layoutSkeleton.visibility = View.GONE
                     binding.layoutSkeleton.alpha = 1f
 
-                    // Tampilkan konten sesuai state
-                    recalculate()
-
-                    // Fade in konten
-                    val target = if (binding.layoutEmptyState.visibility == View.VISIBLE)
-                        binding.layoutEmptyState else binding.layoutReceiptContent
-                    target.alpha = 0f
-                    target.animate().alpha(1f).setDuration(300).start()
+                    // Tampilkan empty state (nota disembunyikan sampai klik Hitung)
+                    binding.layoutEmptyState.visibility = View.VISIBLE
+                    binding.layoutEmptyState.alpha = 0f
+                    binding.layoutEmptyState.animate().alpha(1f).setDuration(300).start()
                 }
                 .start()
         }, 600)
@@ -107,11 +105,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private var hasCalculated = false
+
     private fun setupInputs() {
         val watcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) = recalculate()
+            override fun afterTextChanged(s: Editable?) {
+                // Jika sudah pernah hitung, update real-time. Jika belum, sembunyikan nota.
+                if (hasCalculated) {
+                    recalculate()
+                } else {
+                    hideReceipt()
+                }
+            }
         }
         binding.etDeviceName.addTextChangedListener(watcher)
         binding.etCustomerName.addTextChangedListener(watcher)
@@ -119,14 +126,21 @@ class MainActivity : AppCompatActivity() {
         // Format ribuan otomatis untuk modal sparepart (UI/UX improvement)
         binding.etSparepartCost.addTextChangedListener(
             ThousandSeparatorTextWatcher(binding.etSparepartCost) { _ ->
-                recalculate()
+                if (hasCalculated) {
+                    recalculate()
+                } else {
+                    hideReceipt()
+                }
             }
         )
 
         binding.rgServiceLevel.setOnCheckedChangeListener { group, _ ->
-            // Haptic feedback ringan saat ganti level
             group.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_TICK)
-            recalculate()
+            if (hasCalculated) {
+                recalculate()
+            } else {
+                hideReceipt()
+            }
         }
     }
 
@@ -134,18 +148,53 @@ class MainActivity : AppCompatActivity() {
         binding.btnSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
+
+        binding.btnCalculate.setOnClickListener {
+            // Haptic feedback kuat untuk aksi utama
+            it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
+            hasCalculated = true
+            recalculate()
+            showReceiptWithAnimation()
+        }
+
         binding.btnNewReceipt.setOnClickListener {
-            // Finalisasi: nomor nota naik (PRD 10.1), lalu form dibersihkan
             receiptGen.consumeNext()
             clearInputs()
-            // Haptic feedback untuk aksi penting
+            hasCalculated = false
+            hideReceipt()
             it.performHapticFeedback(android.view.HapticFeedbackConstants.CONFIRM)
-            // Success animation (UI/UX delight)
             showSuccessAnimation()
         }
+
         binding.btnShareReceipt.setOnClickListener {
             shareReceiptAsText()
         }
+    }
+
+    /** Tampilkan nota dengan animasi slide up + fade in. */
+    private fun showReceiptWithAnimation() {
+        binding.cardReceipt.visibility = View.VISIBLE
+        binding.btnShareReceipt.visibility = View.VISIBLE
+
+        binding.cardReceipt.alpha = 0f
+        binding.cardReceipt.translationY = 100f
+
+        binding.cardReceipt.animate()
+            .alpha(1f)
+            .translationY(0f)
+            .setDuration(400)
+            .start()
+
+        // Auto-scroll ke nota setelah animasi selesai
+        binding.root.postDelayed({
+            binding.scrollView.smoothScrollTo(0, binding.cardReceipt.top - 32)
+        }, 450)
+    }
+
+    /** Sembunyikan nota. */
+    private fun hideReceipt() {
+        binding.cardReceipt.visibility = View.GONE
+        binding.btnShareReceipt.visibility = View.GONE
     }
 
     /** Animasi success: scale up + fade, lalu hilang. */
@@ -233,7 +282,7 @@ class MainActivity : AppCompatActivity() {
         binding.etCustomerName.text?.clear()
         binding.etSparepartCost.text?.clear()
         binding.rbLevel1.isChecked = true
-        recalculate()
+        hasCalculated = false
     }
 
     private fun selectedLevel(): ServiceLevel = when (binding.rgServiceLevel.checkedRadioButtonId) {
