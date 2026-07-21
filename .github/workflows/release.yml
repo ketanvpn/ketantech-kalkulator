@@ -33,13 +33,18 @@ jobs:
       - name: Jalankan Unit Test
         run: ./gradlew testDebugUnitTest
 
-      - name: Build APK Rilis
-        run: ./gradlew assembleRelease
+      - name: Build APK Debug (untuk penggunaan pribadi)
+        run: ./gradlew assembleDebug
+
+      - name: Cek file APK
+        run: ls -la app/build/outputs/apk/debug/
 
       - name: Rename APK dengan nomor versi
         run: |
-          APK=$(ls app/build/outputs/apk/release/*.apk | head -n 1)
+          APK=$(ls app/build/outputs/apk/debug/*.apk | head -n 1)
+          echo "Found APK: $APK"
           cp "$APK" "ketantech-kalkulator-v${{ steps.version.outputs.VERSION }}.apk"
+          ls -la ketantech-kalkulator-v*.apk
 
       - name: Buat GitHub Release
         uses: softprops/action-gh-release@v2
@@ -59,3 +64,5 @@ jobs:
             > APK ini ditandatangani dengan debug key — aman untuk penggunaan pribadi.
           files: ketantech-kalkulator-v*.apk
           generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
