@@ -153,15 +153,15 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- ================= NOTA PELANGGAN ================= -->
+        <!-- ================= NOTA PELANGGAN (Struk Style) ================= -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="16dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="6dp"
             app:strokeColor="@color/slate_divider"
             app:strokeWidth="1dp">
 
@@ -173,8 +173,8 @@
 
                 <!-- Logo + nama toko -->
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:layout_gravity="center_horizontal"
                     android:contentDescription="@string/desc_logo"
                     android:src="@drawable/ic_logo" />
@@ -183,10 +183,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:text="@string/receipt_store_name"
                     android:textColor="@color/slate_text"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -195,13 +195,14 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/receipt_store_tagline"
                     android:textColor="@color/slate_text_secondary"
-                    android:textSize="12sp" />
+                    android:textSize="11sp" />
 
+                <!-- Garis putus-putus ala struk -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@color/slate_divider" />
+                    android:layout_height="2dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/dashed_line" />
 
                 <!-- Nomor nota & tanggal -->
                 <LinearLayout
@@ -234,9 +235,9 @@
                     android:id="@+id/tvReceiptDevice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:textColor="@color/slate_text"
-                    android:textSize="16sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     tools:text="Samsung A51" />
 
@@ -244,22 +245,35 @@
                     android:id="@+id/tvReceiptCustomer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/slate_text_secondary"
                     android:textSize="13sp"
                     tools:text="Pelanggan: Budi" />
 
+                <!-- Garis putus-putus -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/dashed_line" />
+
+                <!-- Header rincian -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:background="@color/slate_divider" />
+                    android:text="@string/receipt_detail_header"
+                    android:textColor="@color/slate_text_secondary"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
 
                 <!-- Baris: Suku Cadang -->
                 <LinearLayout
                     android:id="@+id/rowSparepart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -285,7 +299,7 @@
                     android:id="@+id/rowRiskFund"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -310,7 +324,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -335,7 +349,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -357,18 +371,22 @@
                         tools:text="Rp150.000" />
                 </LinearLayout>
 
+                <!-- Garis putus-putus sebelum total -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@color/slate_divider" />
+                    android:layout_height="2dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/dashed_line" />
 
-                <!-- Total -->
+                <!-- HERO TOTAL: Card khusus menonjol -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/hero_total_background"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -376,7 +394,7 @@
                         android:layout_weight="1"
                         android:text="@string/receipt_total"
                         android:textColor="@color/slate_text"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -385,7 +403,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
                         android:textColor="@color/green_total"
-                        android:textSize="18sp"
+                        android:textSize="22sp"
                         android:textStyle="bold"
                         tools:text="Rp665.000" />
                 </LinearLayout>
@@ -400,16 +418,24 @@
                     android:padding="12dp"
                     android:textColor="@color/slate_text"
                     android:textSize="12sp"
+                    android:lineSpacingExtra="2dp"
                     tools:text="Harga di atas adalah estimasi transparan. ... Garansi berlaku 30 hari ..." />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:text="@string/receipt_footer_thanks"
                     android:textColor="@color/slate_text_secondary"
                     android:textSize="12sp" />
+
+                <!-- Garis putus-putus penutup struk -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/dashed_line" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

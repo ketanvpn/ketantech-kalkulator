@@ -17,6 +17,7 @@
     <!-- ===== Nota Pelanggan ===== -->
     <string name="receipt_store_name">Ketantech Store</string>
     <string name="receipt_store_tagline">Estimasi Biaya Servis — Transparan &amp; Bergaransi</string>
+    <string name="receipt_detail_header">RINCIAN BIAYA</string>
     <string name="receipt_no_device">-</string>
     <string name="receipt_default_customer">Pelanggan</string>
     <string name="receipt_customer_format">Pelanggan: %1$s</string>
