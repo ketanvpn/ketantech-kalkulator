@@ -3,7 +3,7 @@
 Aplikasi Android untuk menghitung estimasi biaya servis HP secara **konsisten** dan **transparan**.
 Teknisi memasukkan data servis, pelanggan melihat rincian biaya yang jujur dan terstruktur dalam bentuk nota digital.
 
-[![Android CI](https://github.com/USERNAME/REPO/actions/workflows/android-ci.yml/badge.svg)](https://github.com/USERNAME/REPO/actions/workflows/android-ci.yml)
+[![Android CI](https://github.com/ketanvpn/ketantech-kalkulator/actions/workflows/android-ci.yml/badge.svg)](https://github.com/ketanvpn/ketantech-kalkulator/actions/workflows/android-ci.yml)
 
 ---
 
